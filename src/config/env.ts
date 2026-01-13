@@ -20,6 +20,8 @@ const envSchema = z.object({
 /**
  * Validar e exportar configuração tipada
  * Falha imediata do processo se inválido
+ *
+ * Nota: usa console.error pois executa antes do logger estar disponível
  */
 export function validateEnv() {
   try {
@@ -27,12 +29,12 @@ export function validateEnv() {
     return result as z.infer<typeof envSchema>;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('❌ Erro de validação de configuração:');
+      console.error('Configuration validation error:');
       error.errors.forEach((err) => {
         console.error(`  - ${err.path.join('.')}: ${err.message}`);
       });
     } else {
-      console.error('❌ Erro desconhecido ao validar configuração:', error);
+      console.error('Unknown configuration error:', error);
     }
     process.exit(1);
   }
