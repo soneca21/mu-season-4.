@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express';
  * Converte rejections de Promise para next(error)
  */
 export function asyncHandler(
-  handler: (req: Request, res: Response, next: NextFunction) => Promise<any>
+  handler: (req: Request, res: Response, next: NextFunction) => Promise<unknown>
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(handler(req, res, next)).catch(next);

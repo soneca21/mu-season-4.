@@ -11,15 +11,15 @@ export interface AppError {
   error: {
     code: 'VALIDATION_ERROR' | 'NOT_FOUND' | 'INTERNAL_ERROR';
     message: string;
-    details?: any;
+    details?: unknown;
   };
 }
 
 export function errorMiddleware(
   error: unknown,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) {
   // Zod validation error
   if (error instanceof ZodError) {
