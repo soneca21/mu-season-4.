@@ -45,6 +45,19 @@ Projeto inicial de um backend Node.js + TypeScript com Express.
 - `PATCH /tasks/:id` — atualizar task (autenticação obrigatória)
 - `DELETE /tasks/:id` — deletar task (autenticação obrigatória)
 
+## Documentação OpenAPI 3.0
+
+A API possui contrato formal em OpenAPI 3.0, que pode ser consultado via:
+
+- **Swagger UI** (visual): [http://localhost:3000/docs](http://localhost:3000/docs)
+- **Especificação JSON**: [http://localhost:3000/openapi.json](http://localhost:3000/openapi.json)
+
+Ambas as rotas são públicas (sem autenticação) e refletem o estado atual da API incluindo:
+- Todos os endpoints
+- Schemas de requisição/resposta
+- Códigos de erro documentados
+- Requisitos de autenticação
+
 ## Autenticação
 
 Todos os endpoints `/tasks*` requerem autenticação via **API Key** no header `x-api-key`.
