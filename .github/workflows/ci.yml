@@ -32,5 +32,8 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Setup test database
+        run: npx prisma migrate deploy
+
       - name: Test
         run: npm run test
