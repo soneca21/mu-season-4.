@@ -15,5 +15,9 @@ yarn-error.log*
 # Env
 .env
 
+# Database
+*.db
+*.db-journal
+
 # Editor
 .vscode/
