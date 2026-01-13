@@ -13,6 +13,7 @@ const envSchema = z.object({
     .pipe(z.coerce.number().int().positive())
     .default('3000'),
   APP_NAME: z.string().default('mu-season-4'),
+  DATABASE_URL: z.string().default('file:./dev.db'),
 });
 
 /**
