@@ -9,7 +9,7 @@ import { Prisma } from '@prisma/client';
 
 export interface AppError {
   error: {
-    code: 'VALIDATION_ERROR' | 'NOT_FOUND' | 'INTERNAL_ERROR';
+    code: 'VALIDATION_ERROR' | 'NOT_FOUND' | 'INTERNAL_ERROR' | 'UNAUTHORIZED';
     message: string;
     details?: unknown;
   };

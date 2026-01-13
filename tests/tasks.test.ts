@@ -2,6 +2,9 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import app from '../src/app';
 import prisma from '../src/db/prisma';
+import config from '../src/config/index';
+
+const API_KEY = config.API_KEY;
 
 describe('Tasks CRUD', () => {
   let taskId: string;
@@ -19,10 +22,13 @@ describe('Tasks CRUD', () => {
 
   // POST /tasks - Criar task
   it('should create a task', async () => {
-    const res = await request(app).post('/tasks').send({
-      title: 'Learn Prisma',
-      description: 'Study Prisma ORM with TypeScript',
-    });
+    const res = await request(app)
+      .post('/tasks')
+      .set('x-api-key', API_KEY)
+      .send({
+        title: 'Learn Prisma',
+        description: 'Study Prisma ORM with TypeScript',
+      });
 
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('id');
@@ -37,9 +43,12 @@ describe('Tasks CRUD', () => {
 
   // POST /tasks - Validação: título obrigatório
   it('should reject task without title', async () => {
-    const res = await request(app).post('/tasks').send({
-      description: 'No title here',
-    });
+    const res = await request(app)
+      .post('/tasks')
+      .set('x-api-key', API_KEY)
+      .send({
+        description: 'No title here',
+      });
 
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('VALIDATION_ERROR');
@@ -47,10 +56,13 @@ describe('Tasks CRUD', () => {
 
   // POST /tasks - Validação: título vazio
   it('should reject task with empty title', async () => {
-    const res = await request(app).post('/tasks').send({
-      title: '   ',
-      description: 'Only whitespace title',
-    });
+    const res = await request(app)
+      .post('/tasks')
+      .set('x-api-key', API_KEY)
+      .send({
+        title: '   ',
+        description: 'Only whitespace title',
+      });
 
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('VALIDATION_ERROR');
@@ -58,7 +70,9 @@ describe('Tasks CRUD', () => {
 
   // GET /tasks - Listar tasks
   it('should list all tasks', async () => {
-    const res = await request(app).get('/tasks');
+    const res = await request(app)
+      .get('/tasks')
+      .set('x-api-key', API_KEY);
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('items');
@@ -69,7 +83,9 @@ describe('Tasks CRUD', () => {
 
   // GET /tasks/:id - Obter task
   it('should get a task by id', async () => {
-    const res = await request(app).get(`/tasks/${taskId}`);
+    const res = await request(app)
+      .get(`/tasks/${taskId}`)
+      .set('x-api-key', API_KEY);
 
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(taskId);
@@ -79,7 +95,9 @@ describe('Tasks CRUD', () => {
 
   // GET /tasks/:id - Task não encontrada
   it('should return 404 for non-existent task', async () => {
-    const res = await request(app).get('/tasks/00000000-0000-0000-0000-000000000000');
+    const res = await request(app)
+      .get('/tasks/00000000-0000-0000-0000-000000000000')
+      .set('x-api-key', API_KEY);
 
     expect(res.status).toBe(404);
     expect(res.body.error.code).toBe('NOT_FOUND');
@@ -88,9 +106,12 @@ describe('Tasks CRUD', () => {
 
   // PATCH /tasks/:id - Atualizar status
   it('should update task status', async () => {
-    const res = await request(app).patch(`/tasks/${taskId}`).send({
-      status: 'doing',
-    });
+    const res = await request(app)
+      .patch(`/tasks/${taskId}`)
+      .set('x-api-key', API_KEY)
+      .send({
+        status: 'doing',
+      });
 
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(taskId);
@@ -100,9 +121,12 @@ describe('Tasks CRUD', () => {
 
   // PATCH /tasks/:id - Atualizar título
   it('should update task title', async () => {
-    const res = await request(app).patch(`/tasks/${taskId}`).send({
-      title: 'Master Prisma',
-    });
+    const res = await request(app)
+      .patch(`/tasks/${taskId}`)
+      .set('x-api-key', API_KEY)
+      .send({
+        title: 'Master Prisma',
+      });
 
     expect(res.status).toBe(200);
     expect(res.body.title).toBe('Master Prisma');
@@ -111,9 +135,12 @@ describe('Tasks CRUD', () => {
 
   // PATCH /tasks/:id - Limpar description
   it('should clear task description', async () => {
-    const res = await request(app).patch(`/tasks/${taskId}`).send({
-      description: null,
-    });
+    const res = await request(app)
+      .patch(`/tasks/${taskId}`)
+      .set('x-api-key', API_KEY)
+      .send({
+        description: null,
+      });
 
     expect(res.status).toBe(200);
     expect(res.body.description).toBeNull();
@@ -121,7 +148,10 @@ describe('Tasks CRUD', () => {
 
   // PATCH /tasks/:id - Body vazio
   it('should reject PATCH with empty body', async () => {
-    const res = await request(app).patch(`/tasks/${taskId}`).send({});
+    const res = await request(app)
+      .patch(`/tasks/${taskId}`)
+      .set('x-api-key', API_KEY)
+      .send({});
 
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('VALIDATION_ERROR');
@@ -129,9 +159,12 @@ describe('Tasks CRUD', () => {
 
   // PATCH /tasks/:id - Task não encontrada
   it('should return 404 when updating non-existent task', async () => {
-    const res = await request(app).patch('/tasks/00000000-0000-0000-0000-000000000000').send({
-      status: 'done',
-    });
+    const res = await request(app)
+      .patch('/tasks/00000000-0000-0000-0000-000000000000')
+      .set('x-api-key', API_KEY)
+      .send({
+        status: 'done',
+      });
 
     expect(res.status).toBe(404);
     expect(res.body.error.code).toBe('NOT_FOUND');
@@ -139,9 +172,12 @@ describe('Tasks CRUD', () => {
 
   // PATCH /tasks/:id - Status inválido
   it('should reject invalid status', async () => {
-    const res = await request(app).patch(`/tasks/${taskId}`).send({
-      status: 'invalid',
-    });
+    const res = await request(app)
+      .patch(`/tasks/${taskId}`)
+      .set('x-api-key', API_KEY)
+      .send({
+        status: 'invalid',
+      });
 
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('VALIDATION_ERROR');
@@ -149,7 +185,9 @@ describe('Tasks CRUD', () => {
 
   // DELETE /tasks/:id - Deletar task
   it('should delete a task', async () => {
-    const res = await request(app).delete(`/tasks/${taskId}`);
+    const res = await request(app)
+      .delete(`/tasks/${taskId}`)
+      .set('x-api-key', API_KEY);
 
     expect(res.status).toBe(204);
     expect(res.text).toBe('');
@@ -157,7 +195,9 @@ describe('Tasks CRUD', () => {
 
   // GET /tasks/:id - Verificar que foi deletada
   it('should return 404 after deletion', async () => {
-    const res = await request(app).get(`/tasks/${taskId}`);
+    const res = await request(app)
+      .get(`/tasks/${taskId}`)
+      .set('x-api-key', API_KEY);
 
     expect(res.status).toBe(404);
     expect(res.body.error.code).toBe('NOT_FOUND');
@@ -165,7 +205,9 @@ describe('Tasks CRUD', () => {
 
   // DELETE /tasks/:id - Task não encontrada
   it('should return 404 when deleting non-existent task', async () => {
-    const res = await request(app).delete('/tasks/00000000-0000-0000-0000-000000000000');
+    const res = await request(app)
+      .delete('/tasks/00000000-0000-0000-0000-000000000000')
+      .set('x-api-key', API_KEY);
 
     expect(res.status).toBe(404);
     expect(res.body.error.code).toBe('NOT_FOUND');
@@ -175,13 +217,18 @@ describe('Tasks CRUD', () => {
   it('should list multiple tasks', async () => {
     // Criar 3 tasks
     for (let i = 1; i <= 3; i++) {
-      await request(app).post('/tasks').send({
-        title: `Task ${i}`,
-        status: 'todo',
-      });
+      await request(app)
+        .post('/tasks')
+        .set('x-api-key', API_KEY)
+        .send({
+          title: `Task ${i}`,
+          status: 'todo',
+        });
     }
 
-    const res = await request(app).get('/tasks');
+    const res = await request(app)
+      .get('/tasks')
+      .set('x-api-key', API_KEY);
 
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(3);

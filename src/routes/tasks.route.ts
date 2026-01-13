@@ -2,8 +2,12 @@ import { Router, Request, Response } from 'express';
 import * as tasksService from '../tasks/tasks.service.js';
 import { CreateTaskSchema, UpdateTaskSchema } from '../tasks/tasks.schemas.js';
 import { asyncHandler } from '../utils/async-handler.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = Router();
+
+// Apply auth middleware to all /tasks routes
+router.use(authMiddleware);
 
 /**
  * POST /tasks
