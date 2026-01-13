@@ -1,10 +1,11 @@
 import app from './app.js';
-
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+import config from './config/index.js';
 
 try {
-  const server = app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  const server = app.listen(config.PORT, () => {
+    console.log(
+      `✓ ${config.APP_NAME} running on port ${config.PORT} [${config.NODE_ENV}]`
+    );
   });
 
   server.on('error', (err: unknown) => {
