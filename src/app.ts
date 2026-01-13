@@ -9,3 +9,6 @@ app.use(express.json());
 registerRoutes(app);
 
 export default app;
+
+// introduce an unused variable to cause ESLint error
+const unusedVar = 42;
